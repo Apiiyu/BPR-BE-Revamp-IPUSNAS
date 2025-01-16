@@ -22,7 +22,7 @@ export class PageMetaDto {
   @ApiProperty()
   public size: number;
 
-  constructor(data: any) {
+  constructor(data: IConstructPageMeta) {
     this.totalData = data.totalData;
     this.total = data.total;
     this.size = data.size;

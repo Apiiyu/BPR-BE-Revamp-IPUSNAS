@@ -43,7 +43,10 @@ export class AuthenticationController {
   })
   @ApiBaseResponse(LoginWithAccessToken)
   @UseGuards(AuthenticationLocalGuard)
-  public async login(@Body() _body: LoginUsernameDto, @Req() req: any) {
+  public async login(
+    @Body() _body: LoginUsernameDto,
+    @Req() req: ICustomRequestHeaders,
+  ) {
     const result = await this._authenticationService.login(req.user);
 
     return {
@@ -69,7 +72,7 @@ export class AuthenticationController {
   @UseGuards(AuthenticationJWTGuard)
   @Get('profile')
   @ApiBearerAuth()
-  public async getProfile(@Req() req: any) {
+  public async getProfile(@Req() req: ICustomRequestHeaders) {
     const result = await this._usersService.findOneById(req.user.id);
 
     return {

@@ -7,12 +7,35 @@ declare global {
   interface IRequestUser {
     id: string;
     email: string;
-    name: string;
+    username: string;
   }
 
   interface IResultFilter {
-    data: any[];
+    data: Record<string, unknown>;
     total: number;
     totalData: number;
+  }
+
+  interface IConstructBaseResponse {
+    statusCode: number;
+    message: string;
+    data: T;
+  }
+
+  interface IConstructPageMeta {
+    page: number;
+    pageCount: number;
+    size: number;
+    total: number;
+    totalData: number;
+  }
+
+  interface ICustomRequestHeaders extends Request {
+    user: IRequestUser;
+  }
+
+  interface IValidateJWTStrategy {
+    sub: string;
+    name: string;
   }
 }

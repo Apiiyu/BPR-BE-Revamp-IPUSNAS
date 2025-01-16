@@ -57,7 +57,7 @@ export class AuthenticationService {
   /**
    * @description Handle business logic for logging in a user
    */
-  public async login(user: any): Promise<ILogin> {
+  public async login(user: IRequestUser): Promise<ILogin> {
     const payload = { username: user.username, sub: user.id };
 
     return {
