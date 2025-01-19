@@ -4,6 +4,7 @@ import { DatabasePostgresConfigModule } from './configurations/database/postgres
 
 // Modules
 import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { AuthorsModule } from './modules/authors/authors.module';
 import { GenresModule } from './modules/genres/genres.module';
 import { UserInterestsModule } from './modules/user-interests/user-interests.module';
 import { UsersModule } from './modules/users/users.module';
@@ -23,6 +24,7 @@ import { PostgresDatabaseProviderModule } from './database/postgres/postgres-pro
 
     // Core Feature Modules
     AuthenticationModule,
+    AuthorsModule,
     GenresModule,
     UserInterestsModule,
     UsersModule,
