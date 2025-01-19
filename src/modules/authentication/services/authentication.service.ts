@@ -36,7 +36,6 @@ export class AuthenticationService {
   ): Promise<UsersEntity | null> {
     try {
       const user = await this._usersService.findOneByEmail(email);
-      console.log(user, 'user');
       const isMatch = await bcrypt.compare(`${pass}`, user!.password);
 
       if (!isMatch) {

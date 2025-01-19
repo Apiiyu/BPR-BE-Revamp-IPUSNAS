@@ -58,6 +58,7 @@
     "@types/compression": "latest",
     "@types/express": "latest",
     "@types/jest": "latest",
+    "@types/multer": "^1.4.12",
     "@types/node": "latest",
     "@types/passport-jwt": "latest",
     "@types/passport-local": "latest",
