@@ -8,6 +8,7 @@ import { AuthorsModule } from './modules/authors/authors.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { BooksModule } from './modules/books/books.module';
 import { GenresModule } from './modules/genres/genres.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 import { UserInterestsModule } from './modules/user-interests/user-interests.module';
 import { UsersModule } from './modules/users/users.module';
 
@@ -30,6 +31,7 @@ import { PostgresDatabaseProviderModule } from './database/postgres/postgres-pro
     BookingsModule,
     BooksModule,
     GenresModule,
+    NotificationsModule,
     UserInterestsModule,
     UsersModule,
   ],
