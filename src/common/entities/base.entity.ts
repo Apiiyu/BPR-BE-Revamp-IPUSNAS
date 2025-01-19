@@ -22,7 +22,7 @@ export abstract class AppBaseEntity {
    */
   @ApiProperty()
   @Column({
-    name: 'createdAt',
+    name: 'created_at',
     type: 'bigint',
     readonly: true,
     nullable: true,
@@ -31,14 +31,14 @@ export abstract class AppBaseEntity {
 
   @ApiProperty()
   @Column({
-    name: 'createdBy',
+    name: 'created_by',
     type: 'varchar',
     nullable: true,
   })
   public createdBy: string;
 
   @Column({
-    name: 'createdById',
+    name: 'created_by_id',
     type: 'uuid',
     nullable: true,
   })
@@ -47,7 +47,7 @@ export abstract class AppBaseEntity {
 
   @ApiProperty()
   @Column({
-    name: 'updatedAt',
+    name: 'updated_at',
     type: 'bigint',
     nullable: true,
   })
@@ -55,14 +55,14 @@ export abstract class AppBaseEntity {
 
   @ApiProperty()
   @Column({
-    name: 'updatedBy',
+    name: 'updated_by',
     type: 'varchar',
     nullable: true,
   })
   public updatedBy: string;
 
   @Column({
-    name: 'updatedById',
+    name: 'updated_by_id',
     type: 'uuid',
     nullable: true,
   })
@@ -71,7 +71,7 @@ export abstract class AppBaseEntity {
 
   @ApiProperty()
   @Column({
-    name: 'deletedAt',
+    name: 'deleted_at',
     type: 'bigint',
     nullable: true,
   })
@@ -79,14 +79,14 @@ export abstract class AppBaseEntity {
 
   @ApiProperty()
   @Column({
-    name: 'deletedBy',
+    name: 'deleted_by',
     type: 'varchar',
     nullable: true,
   })
   public deletedBy: string;
 
   @Column({
-    name: 'deletedById',
+    name: 'deleted_by_id',
     type: 'uuid',
     nullable: true,
   })

@@ -17,7 +17,6 @@ export class AuthenticationJWTGuard extends AuthGuard('jwt') {
   public handleRequest(error: Error, user: any, info: string) {
     // You can throw an exception based on either "info" or "err" arguments
     if (error || !user) {
-      console.log(`[ERROR] AuthenticationJWTGuard: ${info}`);
       throw error || new UnauthorizedException();
     }
 

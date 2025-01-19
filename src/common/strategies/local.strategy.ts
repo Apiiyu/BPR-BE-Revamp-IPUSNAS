@@ -11,12 +11,12 @@ import { AuthenticationService } from '../../modules/authentication/services/aut
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, 'local-auth') {
   constructor(private readonly _authenticationService: AuthenticationService) {
-    super();
+    super({ usernameField: 'email' });
   }
 
-  async validate(username: string, password: string): Promise<any> {
+  async validate(email: string, password: string): Promise<any> {
     const user = await this._authenticationService.validateUser(
-      username,
+      email,
       password,
     );
 

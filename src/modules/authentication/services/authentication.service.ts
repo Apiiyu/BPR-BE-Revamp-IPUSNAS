@@ -31,11 +31,12 @@ export class AuthenticationService {
    * @description Handle business logic for validating a user
    */
   public async validateUser(
-    username: string,
+    email: string,
     pass: string,
   ): Promise<UsersEntity | null> {
     try {
-      const user = await this._usersService.findOneByUsername(username);
+      const user = await this._usersService.findOneByEmail(email);
+      console.log(user, 'user');
       const isMatch = await bcrypt.compare(`${pass}`, user!.password);
 
       if (!isMatch) {
@@ -58,7 +59,7 @@ export class AuthenticationService {
    * @description Handle business logic for logging in a user
    */
   public async login(user: IRequestUser): Promise<ILogin> {
-    const payload = { username: user.username, sub: user.id };
+    const payload = { email: user.email, sub: user.id };
 
     return {
       accessToken: this._jwtService.sign(payload),

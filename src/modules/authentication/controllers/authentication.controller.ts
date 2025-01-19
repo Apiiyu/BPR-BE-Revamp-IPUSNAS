@@ -2,7 +2,7 @@
 import { ApiBaseResponse } from '../../../common/decorators/api-base-response.decorator';
 
 // DTOs
-import { LoginUsernameDto, LoginWithAccessToken } from '../dtos/login.dto';
+import { LoginEmailDto, LoginWithAccessToken } from '../dtos/login.dto';
 import { RegisterEmailDto } from '../dtos/register.dto';
 
 // Entities
@@ -39,12 +39,12 @@ export class AuthenticationController {
   @Post('login')
   @HttpCode(200)
   @ApiOperation({
-    summary: 'Login with username and password',
+    summary: 'Login with email and password',
   })
   @ApiBaseResponse(LoginWithAccessToken)
   @UseGuards(AuthenticationLocalGuard)
   public async login(
-    @Body() _body: LoginUsernameDto,
+    @Body() _body: LoginEmailDto,
     @Req() req: ICustomRequestHeaders,
   ) {
     const result = await this._authenticationService.login(req.user);

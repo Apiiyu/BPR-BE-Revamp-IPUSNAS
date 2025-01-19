@@ -90,23 +90,23 @@ describe('AuthenticationService', () => {
 
   describe('validateUser', () => {
     it('should return bad request invalid credentials when user not found', async () => {
-      const username = 'username';
+      const email = 'email@test.com';
       const password = 'secret';
 
       jest
-        .spyOn(userService, 'findOneByUsername')
+        .spyOn(userService, 'findOneByEmail')
         .mockResolvedValue(expectedValue);
 
       // Expecting a bad request error when user not found
       try {
-        await service.validateUser(username, password);
+        await service.validateUser(email, password);
       } catch (error) {
         expect(error.message).toBe('Invalid credentials');
       }
     });
 
     it('should return bad request invalid credentials when password invalid', async () => {
-      const username = 'username';
+      const email = 'email@test.com';
       const password = 'secret';
 
       // Mocking bcrypt.compare to return false
@@ -118,21 +118,19 @@ describe('AuthenticationService', () => {
 
       // Expecting a bad request error when password invalid
       try {
-        await service.validateUser(username, password);
+        await service.validateUser(email, password);
       } catch (error) {
         expect(error.message).toBe('Invalid credentials');
       }
     });
 
     it('should return a user', async () => {
-      const username = 'username';
+      const email = 'email@test.com';
       const password = 'secret';
 
       jest.spyOn(bcrypt, 'compare').mockImplementation(() => true);
 
-      expect(await service.validateUser(username, password)).toHaveProperty(
-        'id',
-      );
+      expect(await service.validateUser(email, password)).toHaveProperty('id');
     });
   });
 
@@ -141,7 +139,8 @@ describe('AuthenticationService', () => {
       const request = {
         user: {
           id: '1',
-          name: 'user name',
+          username: 'user name',
+          email: 'email@test.com',
         },
       };
 

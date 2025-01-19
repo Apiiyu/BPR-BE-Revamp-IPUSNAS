@@ -2,7 +2,7 @@
 import { AuthenticationController } from './authentication.controller';
 
 // DTOs
-import { LoginUsernameDto } from '../dtos/login.dto';
+import { LoginEmailDto } from '../dtos/login.dto';
 
 // NestJS Libraries
 import { JwtModule } from '@nestjs/jwt';
@@ -81,15 +81,38 @@ describe('AuthenticationController', () => {
 
   describe('[POST] /authentication/login', () => {
     it('should return a accessToken', async () => {
-      const body = new LoginUsernameDto();
-      body.username = 'email@test.com';
+      const body = new LoginEmailDto();
+      body.email = 'email@test.com';
       body.password = 'secret';
 
-      const request = {
+      const request: ICustomRequestHeaders = {
+        keepalive: true,
+        bodyUsed: true,
+        method: 'POST',
+        cache: 'no-cache',
+        credentials: 'same-origin',
+        destination: 'document',
         user: {
           id: '1',
-          name: 'user name',
+          username: 'user name',
+          email: 'test@mailnesia.com',
         },
+        mode: 'cors',
+        redirect: 'follow',
+        integrity: '',
+        referrer: 'client',
+        url: 'http://localhost:3000/authentication/login',
+        referrerPolicy: 'strict-origin-when-cross-origin',
+        clone: jest.fn(),
+        signal: new AbortSignal(),
+        headers: new Headers(),
+        arrayBuffer: jest.fn(),
+        blob: jest.fn(),
+        formData: jest.fn(),
+        bytes: jest.fn(),
+        json: jest.fn(),
+        text: jest.fn(),
+        body: null,
       };
 
       const response = await controller.login(body, request);

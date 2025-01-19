@@ -1,15 +1,12 @@
 // DTOs
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { CreateGenreDto } from '../dtos/create-genre.dto';
 import { ListOptionDto } from '../../../common/dtos/list-options.dto';
+import { UpdateGenreDto } from '../dtos/update-genre.dto';
 import { PaginateDto } from '../../../common/dtos/paginate.dto';
 import { PageMetaDto } from '../../../common/dtos/page-meta.dto';
-import { UpdateUserDto } from '../dtos/update-user.dto';
 
 // Entities
-import { UsersEntity } from '../entities/users.entity';
-
-// Helpers
-import { QuerySortingHelper } from '../../../common/helpers/query-sorting.helper';
+import { GenresEntity } from '../entities/genres.entity';
 
 // NestJS Libraries
 import {
@@ -26,25 +23,24 @@ import {
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
+import { QuerySortingHelper } from '../../../common/helpers/query-sorting.helper';
 
 @Injectable()
-export class UsersService {
+export class GenresService {
   constructor(
-    @InjectRepository(UsersEntity)
-    private readonly _usersRepository: Repository<UsersEntity>,
+    @InjectRepository(GenresEntity)
+    private readonly _genresRepository: Repository<GenresEntity>,
     private readonly _dataSource: DataSource,
   ) {}
 
   /**
    * @description Handle added relationship
-   * @param {SelectQueryBuilder<UsersEntity>} query
+   * @param {SelectQueryBuilder<GenresEntity>} query
    *
    * @returns {void}
    */
-  private _addRelations(query: SelectQueryBuilder<UsersEntity>): void {
+  private _addRelations(query: SelectQueryBuilder<GenresEntity>): void {
     // ? Add relations here
-    query.leftJoinAndSelect('users.interests', 'interests');
-    query.leftJoinAndSelect('interests.genre', 'genre');
   }
 
   /**
@@ -52,15 +48,14 @@ export class UsersService {
    */
   private _searchData(
     filters: ListOptionDto,
-    query: SelectQueryBuilder<UsersEntity>,
+    query: SelectQueryBuilder<GenresEntity>,
   ): void {
     query.andWhere(
       `(
-        users.username ILIKE :search OR
-        users.email ILIKE :search
-      )
-      ${filters.isDeleted ? '' : 'AND users.deleted_at IS NULL'}
-      `,
+          genres.name ILIKE :search
+        )
+        ${filters.isDeleted ? '' : 'AND genres.deleted_at IS NULL'}
+        `,
       {
         search: `%${filters.search}%`,
       },
@@ -72,11 +67,10 @@ export class UsersService {
    */
   private _sortData(
     filters: ListOptionDto,
-    query: SelectQueryBuilder<UsersEntity>,
+    query: SelectQueryBuilder<GenresEntity>,
   ): void {
     const permitSort = {
-      username: 'users.username',
-      email: 'users.email',
+      name: 'genres.name',
     };
 
     QuerySortingHelper(query, filters.sortBy, permitSort);
@@ -87,7 +81,7 @@ export class UsersService {
    */
   private async _filterData(
     filters: ListOptionDto,
-    query: SelectQueryBuilder<UsersEntity>,
+    query: SelectQueryBuilder<GenresEntity>,
   ): Promise<IResultFilter> {
     try {
       this._addRelations(query);
@@ -97,9 +91,9 @@ export class UsersService {
       }
 
       if (filters.isDeleted) {
-        query.andWhere('users.deleted_at IS NOT NULL');
+        query.andWhere('genres.deleted_at IS NOT NULL');
       } else {
-        query.andWhere('users.deleted_at IS NULL');
+        query.andWhere('genres.deleted_at IS NULL');
       }
 
       if (filters.sortBy.length) {
@@ -130,39 +124,42 @@ export class UsersService {
   /**
    * @description Handle business logic for creating a user
    */
-  public async create(payload: CreateUserDto): Promise<UsersEntity> {
-    try {
-      const model = new UsersEntity();
+  public async create(
+    payload: CreateGenreDto,
+    user: IRequestUser,
+  ): Promise<GenresEntity> {
+    let createdDataId = '';
 
-      // ? After we initialize the instance of the model, we need to merge the data from the DTO
-      this._usersRepository.merge(model, payload);
+    await this._dataSource.transaction(async (manager: EntityManager) => {
+      // Create a new entity of users and save it into database
+      const result = this._genresRepository.create(payload);
+      createdDataId = result.id;
 
-      // ? Then, we save the model to the database
-      const user = await this._usersRepository.save(model);
-
-      return user;
-    } catch (error) {
-      throw new BadRequestException('Bad Request', {
-        cause: new Error(),
-        description: error.response ? error?.response?.error : error.message,
+      await manager.save(result, {
+        data: {
+          action: 'UPDATE',
+          user,
+        },
       });
-    }
+    });
+
+    return this.findOneById(createdDataId);
   }
 
   /**
    * @description Handle business logic for listing all users
    */
-  public async delete(id: string, user: IRequestUser): Promise<UsersEntity> {
+  public async delete(id: string, user: IRequestUser): Promise<GenresEntity> {
     try {
       const selectedUser = await this.findOneById(id);
       const deletedAt = Math.floor(Date.now() / 1000);
 
       // Merge Two Entity into single one and save it
-      this._usersRepository.merge(selectedUser, {
+      this._genresRepository.merge(selectedUser, {
         deletedAt,
       });
 
-      return await this._usersRepository.save(selectedUser, {
+      return await this._genresRepository.save(selectedUser, {
         data: {
           action: 'DELETE',
           user,
@@ -181,10 +178,10 @@ export class UsersService {
    */
   public async findAll(
     filters: ListOptionDto,
-  ): Promise<PaginateDto<UsersEntity>> {
+  ): Promise<PaginateDto<GenresEntity>> {
     try {
-      const query: SelectQueryBuilder<UsersEntity> =
-        this._usersRepository.createQueryBuilder('users');
+      const query: SelectQueryBuilder<GenresEntity> =
+        this._genresRepository.createQueryBuilder('genres');
       const { data, total, totalData } = await this._filterData(filters, query);
 
       const meta = new PageMetaDto({
@@ -194,7 +191,7 @@ export class UsersService {
         size: filters.disablePaginate ? totalData : filters.limit,
       });
 
-      return new PaginateDto<UsersEntity>(data, meta);
+      return new PaginateDto<GenresEntity>(data, meta);
     } catch (error) {
       throw new BadRequestException('Bad Request', {
         cause: new Error(),
@@ -206,27 +203,10 @@ export class UsersService {
   /**
    * @description Handle business logic for finding a by specific id
    */
-  public async findOneById(id: string): Promise<UsersEntity> {
-    const user = await this._usersRepository.findOne({
-      where: { id },
-    });
-
-    if (!user) {
-      throw new NotFoundException(`User with id ${id} not found.`);
-    }
-
-    return user;
-  }
-
-  /**
-   * @description Handle business logic for finding a user by username
-   */
-  public async findOneByUsername(
-    username: string,
-  ): Promise<UsersEntity | null> {
+  public async findOneById(id: string): Promise<GenresEntity> {
     try {
-      return await this._usersRepository.findOne({
-        where: { username },
+      return await this._genresRepository.findOneByOrFail({
+        id,
       });
     } catch (error) {
       throw new NotFoundException('Not Found', {
@@ -237,33 +217,18 @@ export class UsersService {
   }
 
   /**
-   * @description Handle business logic for finding a user by email
-   */
-  public async findOneByEmail(email: string): Promise<UsersEntity | null> {
-    const user = await this._usersRepository.findOne({
-      where: { email },
-    });
-
-    if (!user) {
-      return null;
-    }
-
-    return user;
-  }
-
-  /**
    * @description Handle business logic for restoring a user
    */
-  public async restore(id: string, user: IRequestUser): Promise<UsersEntity> {
+  public async restore(id: string, user: IRequestUser): Promise<GenresEntity> {
     try {
       const selectedUser = await this.findOneById(id);
 
       // Merge Two Entity into single one and save it
-      this._usersRepository.merge(selectedUser, {
+      this._genresRepository.merge(selectedUser, {
         deletedAt: null,
       });
 
-      return await this._usersRepository.save(selectedUser, {
+      return await this._genresRepository.save(selectedUser, {
         data: {
           action: 'RESTORE',
           user,
@@ -282,19 +247,19 @@ export class UsersService {
    */
   public async update(
     id: string,
-    payload: UpdateUserDto,
+    payload: UpdateGenreDto,
     user: IRequestUser,
-  ): Promise<UsersEntity> {
+  ): Promise<GenresEntity> {
     try {
       await this._dataSource.transaction(async (manager: EntityManager) => {
-        const selectedUser = await this._usersRepository.findOneOrFail({
+        const selectedUser = await this._genresRepository.findOneOrFail({
           where: {
             id,
           },
         });
 
         // Merge Two Entity into single one and save it
-        this._usersRepository.merge(selectedUser, payload);
+        this._genresRepository.merge(selectedUser, payload);
 
         await manager.save(selectedUser, {
           data: {

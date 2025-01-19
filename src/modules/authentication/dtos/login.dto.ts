@@ -1,5 +1,5 @@
 // Class Validator
-import { IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
 // Interfaces
 import { ILogin } from '../interfaces/authentication.interface';
@@ -7,10 +7,11 @@ import { ILogin } from '../interfaces/authentication.interface';
 // NestJS Libraries
 import { ApiProperty } from '@nestjs/swagger';
 
-export class LoginUsernameDto {
+export class LoginEmailDto {
   @ApiProperty()
   @IsNotEmpty()
-  public username: string;
+  @IsEmail()
+  public email: string;
 
   @ApiProperty()
   @IsNotEmpty()

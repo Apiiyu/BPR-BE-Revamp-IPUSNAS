@@ -4,6 +4,8 @@ import { DatabasePostgresConfigModule } from './configurations/database/postgres
 
 // Modules
 import { AuthenticationModule } from './modules/authentication/authentication.module';
+import { GenresModule } from './modules/genres/genres.module';
+import { UserInterestsModule } from './modules/user-interests/user-interests.module';
 import { UsersModule } from './modules/users/users.module';
 
 // NestJS Libraries
@@ -21,6 +23,8 @@ import { PostgresDatabaseProviderModule } from './database/postgres/postgres-pro
 
     // Core Feature Modules
     AuthenticationModule,
+    GenresModule,
+    UserInterestsModule,
     UsersModule,
   ],
 })
