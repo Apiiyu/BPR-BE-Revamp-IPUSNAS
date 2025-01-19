@@ -3,6 +3,7 @@ import { Exclude } from 'class-transformer';
 
 // Entities
 import { AppBaseEntity } from '../../../common/entities/base.entity';
+import { BookingsEntity } from '../../bookings/entities/bookings.entity';
 import { UserInterestsEntity } from '../../user-interests/entities/user-interests.entity';
 
 // NestJS Libraries
@@ -30,4 +31,7 @@ export class UsersEntity extends AppBaseEntity {
    */
   @OneToMany(() => UserInterestsEntity, (userInterest) => userInterest.user)
   public interests: UserInterestsEntity[];
+
+  @OneToMany(() => BookingsEntity, (booking) => booking.user)
+  public bookings: BookingsEntity[];
 }
