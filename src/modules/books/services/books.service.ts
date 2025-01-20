@@ -34,7 +34,7 @@ import { QuerySortingHelper } from '../../../common/helpers/query-sorting.helper
 @Injectable()
 export class BooksService {
   private readonly _prefix = 'books';
-  private readonly _uploadDirectory = `${process.env.APP_UPLOAD_DIRECTORIES}`;
+  private readonly _uploadDirectory = `${process.env.APP_UPLOAD_DIRECTORIES}/public`;
 
   constructor(
     @InjectRepository(BooksEntity)

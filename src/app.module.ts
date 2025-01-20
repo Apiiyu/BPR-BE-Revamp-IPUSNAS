@@ -7,6 +7,7 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 import { AuthorsModule } from './modules/authors/authors.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
 import { BooksModule } from './modules/books/books.module';
+import { FilesModule } from './modules/files/files.module';
 import { GenresModule } from './modules/genres/genres.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { UserInterestsModule } from './modules/user-interests/user-interests.module';
@@ -30,6 +31,7 @@ import { PostgresDatabaseProviderModule } from './database/postgres/postgres-pro
     AuthorsModule,
     BookingsModule,
     BooksModule,
+    FilesModule,
     GenresModule,
     NotificationsModule,
     UserInterestsModule,
