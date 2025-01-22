@@ -58,11 +58,47 @@ export class BooksEntity extends AppBaseEntity {
 
   @ApiProperty()
   @Column({
+    name: 'copies',
+    type: 'int',
+    nullable: false,
+    default: 0,
+  })
+  public copies: number;
+
+  @ApiProperty()
+  @Column({
     name: 'cover',
     type: 'varchar',
     nullable: false,
   })
   public cover: string;
+
+  @ApiProperty()
+  @Column({
+    name: 'is_new',
+    type: 'boolean',
+    nullable: false,
+    default: true,
+  })
+  public isNew: boolean;
+
+  @ApiProperty()
+  @Column({
+    name: 'status',
+    type: 'varchar',
+    nullable: false,
+    default: 'active',
+  })
+  public status: string;
+
+  @ApiProperty()
+  @Column({
+    name: 'queue',
+    type: 'int',
+    nullable: false,
+    default: 0,
+  })
+  public queue: number;
 
   /**
    * Relations

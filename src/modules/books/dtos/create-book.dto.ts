@@ -30,6 +30,22 @@ export class CreateBookDto {
   @IsString()
   public content: string;
 
+  @ApiPropertyOptional({ type: 'number' })
+  @IsOptional()
+  public copies?: number;
+
+  @ApiPropertyOptional({ type: 'boolean' })
+  @IsOptional()
+  public isNew?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  public status?: string;
+
+  @ApiPropertyOptional({ type: 'number' })
+  @IsOptional()
+  public queue?: number;
+
   @ApiPropertyOptional({
     type: 'string',
     format: 'binary',
